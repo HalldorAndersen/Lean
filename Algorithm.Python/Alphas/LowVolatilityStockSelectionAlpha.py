@@ -16,13 +16,6 @@ from QuantConnect.Indicators import *
 from Selection.QC500UniverseSelectionModel import QC500UniverseSelectionModel
 from Selection.FundamentalUniverseSelectionModel import FundamentalUniverseSelectionModel
 
-from itertools import chain
-from math import ceil
-from datetime import timedelta, datetime
-from decimal import Decimal
-from collections import deque
-import pandas as pd
-
 #
 # Portfolios that consist of low-volatility stocks tend to have higher risk-adjusted returns than portfolios that include high-volatility stocks. 
 # Low volatility stocks are often considered to be a "safe" investment option by market participants as the earnings of low-volatility stocks tend to be relatively stable.
@@ -81,7 +74,7 @@ class LowVolatilitySelectionAlphaModel(AlphaModel):
         # Retrieve price history for all securities in the security universe
         hist = algorithm.History(symbols, self.lookback, self.resolution)
         
-        # Return 'None' if no history exists
+        # Return [] if no history exists
         if hist.empty:
             algorithm.Log(f"No data on {algorithm.Time}")
             return insights
@@ -99,7 +92,7 @@ class LowVolatilitySelectionAlphaModel(AlphaModel):
         # Rank and retrieve the securities that have the lowest volatiltiy
         lowVol = dict(sorted(symbolsVol.items(), key=lambda kv: kv[1],reverse=False)[0:number_of_stocks])
         
-        # Emit "up" insight for the securities with the lowest volatility
+        # Emit "up" insight for the securities that have the lowest volatility
         for key,value in lowVol.items():
             insights.append(Insight.Price(key, self.predictionInterval, InsightDirection.Up, 0, None))
 
