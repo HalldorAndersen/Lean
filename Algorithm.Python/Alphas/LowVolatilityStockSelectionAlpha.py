@@ -99,8 +99,6 @@ class LowVolatilitySelectionAlphaModel(AlphaModel):
         # Rank and retrieve the securities that have the lowest volatiltiy
         lowVol = dict(sorted(symbolsVol.items(), key=lambda kv: kv[1],reverse=False)[0:number_of_stocks])
         
-        algorithm.Log("Low vol : " + str(lowVol))
-
         # Emit "up" insight for the securities with the lowest volatility
         for key,value in lowVol.items():
             insights.append(Insight.Price(key, self.predictionInterval, InsightDirection.Up, 0, None))
